@@ -20,5 +20,8 @@ RUN apt-get update && apt-get install -y \
 # 安装 PM2
 RUN npm install -g pm2
 
+# 验证 PM2 是否安装成功
+CMD pm2 --version
+
 # 容器启动时运行的命令
 ENTRYPOINT ["/bin/systemd"]
