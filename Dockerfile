@@ -2,8 +2,8 @@
 ARG TARGETARCH
 
 # 根据架构选择不同的基础镜像
-FROM alpine:latest AS base-amd64
-FROM arm64v8/alpine:latest AS base-arm64
+FROM haoxuan8855/debian-systemd:x64 AS base-amd64
+FROM haoxuan8855/debian-systemd:arm64 AS base-arm64
 
 # 选择对应的基础镜像
 FROM base-${TARGETARCH}
@@ -11,11 +11,14 @@ FROM base-${TARGETARCH}
 # Docker 会自动注入 TARGETARCH 变量
 ARG TARGETARCH
 
-#拷贝文件至/app文件夹
-COPY ./${TARGETARCH}/tfcenter/ /app
+# 安装Node.js环境（pm2依赖Node.js）
+RUN apt-get update && apt-get install -y \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
 
-# 修改 app 文件夹内所有文件的执行权限
-RUN chmod -R +x /app/*
+# 安装 PM2
+RUN npm install -g pm2
 
 # 容器启动时运行的命令
-ENTRYPOINT ["/app/tfcenter64"]
+ENTRYPOINT ["/bin/systemd"]
