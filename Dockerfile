@@ -2,8 +2,8 @@
 ARG TARGETARCH
 
 # 根据架构选择不同的基础镜像
-FROM haoxuan8855/ubuntu-systemd:x64 AS base-amd64
-FROM haoxuan8855/ubuntu-systemd:arm64 AS base-arm64
+FROM haoxuan8855/debian-systemd:x64 AS base-amd64
+FROM haoxuan8855/debian-systemd:arm64 AS base-arm64
 
 # 选择对应的基础镜像
 FROM base-${TARGETARCH}
@@ -19,12 +19,19 @@ USER root
 
 # 安装Node.js环境（pm2依赖Node.js）
 RUN apt-get update && apt-get install -y \
-    curl \
-    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    curl openssh-server \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
 
 # 安装 PM2
 RUN npm install -g pm2
 
+RUN mkdir -p /var/run/sshd \
+ && echo 'root:q09995' | chpasswd
+
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+ && sed -i 's/Port 22/Port 2222/' /etc/ssh/sshd_config \
+ && sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
+ 
 # 容器启动时运行的命令
 ENTRYPOINT ["/bin/systemd"]
