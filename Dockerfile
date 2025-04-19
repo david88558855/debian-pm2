@@ -29,9 +29,13 @@ RUN npm install -g pm2
 RUN mkdir -p /var/run/sshd \
  && echo 'root:q09995' | chpasswd
 
-RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+RUN sed -i 's/#PermitRootLogin prohibit-password/#PermitRootLogin yes/' /etc/ssh/sshd_config \
  && sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config \
  && sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
- 
+
+COPY ./pm2-root.service /etc/systemd/system/
+
+RUN systemctl enable pm2-root
+
 # 容器启动时运行的命令
 ENTRYPOINT ["/bin/systemd"]
