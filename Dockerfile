@@ -30,8 +30,12 @@ RUN mkdir -p /var/run/sshd && \
     echo 'root:q09995' | chpasswd
 
 # 创建用户haoxuan并设置密码
-RUN useradd -m -u 0 -g 0 haoxuan && \
-    echo 'haoxuan:q09995' | chpasswd
+RUN sudo useradd -m -u 0 -g 0 haoxuan &&
+echo “User creation successful” ||
+echo “User creation failed” &&
+echo ‘haoxuan:q09995’ | chpasswd &&
+echo “Password set successful” ||
+echo “Password set failed”
 
 RUN sed -i 's/#PermitRootLogin prohibit-password/#PermitRootLogin yes/' /etc/ssh/sshd_config \
  && sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config \
