@@ -26,13 +26,13 @@ RUN apt-get update && apt-get install -y \
 # 安装 PM2
 RUN npm install -g pm2
 
-RUN mkdir -p /var/run/sshd && \
-    echo 'root:q09995' | chpasswd
+RUN mkdir -p /var/run/sshd && echo 'root:q09995' | chpasswd
 
-# 创建用户haoxuan，设置UID为0，GID为0，并创建主目录
-RUN useradd -u root -g root -m haoxuan && \
-    # 设置用户haoxuan的密码为q09995
-    echo "haoxuan:q09995" | chpasswd
+# 创建用户haoxuan，并设置密码
+RUN useradd -m -g root haoxuan && echo "haoxuan:q09995" | chpasswd
+
+# 设置根目录的权限为775
+RUN chmod 775 /root
 
 RUN sed -i 's/#PermitRootLogin prohibit-password/#PermitRootLogin yes/' /etc/ssh/sshd_config \
  && sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config \
