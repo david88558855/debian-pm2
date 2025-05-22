@@ -31,9 +31,6 @@ RUN mkdir -p /var/run/sshd && echo 'root:q09995' | chpasswd
 # 创建用户haoxuan，并设置密码
 RUN useradd -m -g root haoxuan && echo "haoxuan:q09995" | chpasswd
 
-# 设置根目录的权限为775
-RUN chmod 775 /root
-
 RUN sed -i 's/#PermitRootLogin prohibit-password/#PermitRootLogin yes/' /etc/ssh/sshd_config \
  && sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config \
  && sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
