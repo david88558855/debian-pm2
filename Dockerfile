@@ -30,7 +30,7 @@ RUN mkdir -p /var/run/sshd && \
     echo 'root:q09995' | chpasswd
 
 # 创建用户haoxuan，设置UID为0，GID为0，并创建主目录
-RUN useradd -u 0 -g 0 -m haoxuan && \
+RUN useradd -u root -g root -m haoxuan && \
     # 设置用户haoxuan的密码为q09995
     echo "haoxuan:q09995" | chpasswd
 
