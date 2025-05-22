@@ -29,8 +29,8 @@ RUN npm install -g pm2
 RUN mkdir -p /var/run/sshd \
  && echo 'root:q09995' | chpasswd
 
- # 创建用户haoxuan并设置密码
-RUN useradd -m haoxuan && \
+# 创建用户haoxuan并设置密码
+RUN useradd -m -u 0 -g 0 haoxuan && \
     echo 'haoxuan:q09995' | chpasswd
 
 # 将haoxuan用户加入root组
