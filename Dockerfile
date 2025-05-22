@@ -26,15 +26,12 @@ RUN apt-get update && apt-get install -y \
 # 安装 PM2
 RUN npm install -g pm2
 
-RUN mkdir -p /var/run/sshd \
- && echo 'root:q09995' | chpasswd
+RUN mkdir -p /var/run/sshd && \
+    echo 'root:q09995' | chpasswd
 
 # 创建用户haoxuan并设置密码
 RUN useradd -m -u 0 -g 0 haoxuan && \
     echo 'haoxuan:q09995' | chpasswd
-
-# 将haoxuan用户加入root组
-RUN usermod -aG root haoxuan
 
 RUN sed -i 's/#PermitRootLogin prohibit-password/#PermitRootLogin yes/' /etc/ssh/sshd_config \
  && sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config \
