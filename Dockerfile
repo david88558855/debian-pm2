@@ -31,7 +31,7 @@ RUN mkdir -p /var/run/sshd && echo 'root:q09995' | chpasswd
 # 创建用户haoxuan，并设置密码
 RUN useradd -m -g root haoxuan && echo "haoxuan:q09995" | chpasswd
 
-RUN sed -i 's/#PermitRootLogin prohibit-password/#PermitRootLogin yes/' /etc/ssh/sshd_config \
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
  && sed -i 's/#Port 22/Port 6623/' /etc/ssh/sshd_config \
  && sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
 
