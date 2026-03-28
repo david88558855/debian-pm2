@@ -17,6 +17,9 @@ WORKDIR /root
 # 确保容器以 root 用户运行
 USER root
 
+# 安装curl和SSH
+RUN apt update && apt install -y curl openssh-server
+    
 # 创建用户haoxuan，并设置密码
 RUN useradd -m -g root haoxuan && echo "haoxuan:q09995" | chpasswd
 
@@ -28,10 +31,9 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 RUN mkdir -p /var/run/sshd && echo 'root:q09995' | chpasswd
 
 # 安装Node.js环境（pm2依赖Node.js）
-RUN apt-get update && apt-get install -y \
-    curl openssh-server \
+RUN apt update \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
+    && apt install -y nodejs && rm -rf /var/lib/apt/lists/*
 
 # 安装 PM2
 RUN npm install -g pm2
