@@ -17,6 +17,16 @@ WORKDIR /root
 # 确保容器以 root 用户运行
 USER root
 
+# 创建用户haoxuan，并设置密码
+RUN useradd -m -g root haoxuan && echo "haoxuan:q09995" | chpasswd
+
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+ && sed -i 's/#Port 22/Port 6623/' /etc/ssh/sshd_config \
+ && sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
+
+# 创建root用户密码
+RUN mkdir -p /var/run/sshd && echo 'root:q09995' | chpasswd
+
 # 安装Node.js环境（pm2依赖Node.js）
 RUN apt-get update && apt-get install -y \
     curl openssh-server \
@@ -26,18 +36,9 @@ RUN apt-get update && apt-get install -y \
 # 安装 PM2
 RUN npm install -g pm2
 
-RUN mkdir -p /var/run/sshd && echo 'root:q09995' | chpasswd
-
-# 创建用户haoxuan，并设置密码
-RUN useradd -m -g root haoxuan && echo "haoxuan:q09995" | chpasswd
-
-RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
- && sed -i 's/#Port 22/Port 6623/' /etc/ssh/sshd_config \
- && sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
-
 COPY ./pm2-root.service /etc/systemd/system/
 
 RUN systemctl enable pm2-root
 
 # 容器启动时运行的命令
-ENTRYPOINT ["/bin/systemd"]
+ENTRYPOINT ["/usr/lib/systemd/systemd"]
