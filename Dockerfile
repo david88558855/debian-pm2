@@ -32,7 +32,7 @@ RUN mkdir -p /var/run/sshd && echo 'root:q09995' | chpasswd
 
 # 安装Node.js环境（pm2依赖Node.js）
 RUN apt update \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt install -y nodejs && rm -rf /var/lib/apt/lists/*
 
 # 安装 PM2
