@@ -2,8 +2,8 @@
 ARG TARGETARCH
 
 # 根据架构选择不同的基础镜像
-FROM haoxuan8855/debian-systemd:x64 AS base-amd64
-FROM haoxuan8855/debian-systemd:arm64 AS base-arm64
+FROM --platform=linux/amd64 haoxuan8855/debian-systemd:latest AS base-amd64
+FROM --platform=linux/arm64 haoxuan8855/debian-systemd:latest AS base-arm64
 
 # 选择对应的基础镜像
 FROM base-${TARGETARCH}
