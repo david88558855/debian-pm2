@@ -19,9 +19,6 @@ USER root
 
 # 安装curl和SSH
 RUN apt update && apt install -y curl openssh-server
-    
-# 创建用户haoxuan，并设置密码
-RUN useradd -m -g root haoxuan && echo "haoxuan:q09995" | chpasswd
 
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
  && sed -i 's/#Port 22/Port 6633/' /etc/ssh/sshd_config \
